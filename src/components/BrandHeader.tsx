@@ -1,26 +1,11 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-
-const BrandHeader: React.FC = () => {
+// O logo e texto são aplicados diretamente na tela, sem card de fundo.
+export default function BrandHeader() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.6 }}
-      className="absolute top-6 left-6 z-30"
-    >
-      <div className="glass-card p-4 border-border/10">
-        <div className="flex flex-col space-y-2">
-          <div className="h-8 flex items-center">
-            <span className="text-lg font-bold text-primary">BIOSOLVIT</span>
-          </div>
-          <h1 className="text-sm font-semibold text-foreground/90">
-            Global Impact Dashboard
-          </h1>
-        </div>
-      </div>
-    </motion.div>
+    <div className="flex flex-col items-start">
+      <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
+      <p className="text-sm text-gray-600 font-light mt-2">
+        Global Impact Dashboard
+      </p>
+    </div>
   );
-};
-
-export default BrandHeader;
+}
