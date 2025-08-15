@@ -7,7 +7,7 @@ import InteractiveGuides from "./InteractiveGuides";
 import UnitCard from "./UnitCard";
 import { AnimatePresence } from "framer-motion";
 
-// Mock de dados para simulação
+// Mock de dados para simulação (pode ser substituído pela chamada à API do Supabase)
 const mockUnits = [
   { id: '1', name: 'Biosolvit Matriz', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
   { id: '2', name: 'Biogreen', country: 'Brasil', location: 'Porto Belo, SC', coordinates: { lng: -48.555, lat: -27.158 } },
@@ -20,24 +20,21 @@ export default function OrbitalDashboard() {
   const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
   const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
+  // Função chamada pelo seletor de unidades. Apenas move o mapa.
   const handleUnitSelect = (unit: any) => {
     if (map) {
-      // ### INÍCIO DA CORREÇÃO ###
-      // Para qualquer animação em progresso antes de iniciar uma nova.
-      // Isto garante que a animação de abertura não interfere com a seleção de unidades.
-      map.stop();
-      // ### FIM DA CORREÇÃO ###
-
       map.flyTo({
         center: unit.coordinates,
-        zoom: 10,
+        zoom: 10, // Zoom mais próximo ao aterrisar
         speed: 0.8,
         curve: 1.2,
         essential: true,
       });
+      // Lógica de abrir o card foi REMOVIDA daqui, como solicitado.
     }
   };
   
+  // Esta função será chamada pelo futuro ícone 3D para abrir o card
   const handleIconClick = (unitId: string) => {
       setSelectedUnitId(unitId);
   }
@@ -48,6 +45,7 @@ export default function OrbitalDashboard() {
     <main className="relative w-full h-full">
       <GlobalMap onMapLoad={setMap} />
       
+      {/* Camada da UI sobre o mapa */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="p-6 md:p-8">
           <BrandHeader />
@@ -66,6 +64,7 @@ export default function OrbitalDashboard() {
         </div>
       </div>
       
+      {/* Lógica para mostrar o card expandido */}
       <AnimatePresence>
         {selectedUnit && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-auto bg-black/20 backdrop-blur-sm">
