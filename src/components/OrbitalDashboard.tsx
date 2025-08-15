@@ -23,6 +23,7 @@ export default function OrbitalDashboard() {
     if (map) {
       // ### CORREÇÃO IMPORTANTE ###
       // Para qualquer animação em progresso (como a de abertura) antes de iniciar uma nova.
+      // Isto garante que a animação de abertura não interfere com a seleção de unidades.
       map.stop();
       // ### FIM DA CORREÇÃO ###
 
