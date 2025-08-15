@@ -11,11 +11,9 @@ const BrandHeader: React.FC = () => {
     >
       <div className="glass-card p-4 border-border/10">
         <div className="flex flex-col space-y-2">
-          <img 
-            src="/biosolvit-logo.png" 
-            alt="Biosolvit" 
-            className="h-8 w-auto object-contain"
-          />
+          <div className="h-8 flex items-center">
+            <span className="text-lg font-bold text-primary">BIOSOLVIT</span>
+          </div>
           <h1 className="text-sm font-semibold text-foreground/90">
             Global Impact Dashboard
           </h1>
