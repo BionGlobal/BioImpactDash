@@ -7,173 +7,71 @@ import InteractiveGuides from "./InteractiveGuides";
 import UnitCard from "./UnitCard";
 import { AnimatePresence } from "framer-motion";
 
-// Mock data for company units
-const COMPANY_UNITS = [
-  {
-    id: 'unit-1',
-    name: 'São Paulo Hub',
-    location: 'São Paulo, Brazil',
-    status: 'Operational',
-    color: 'primary' as const,
-    position: [-46.6333, -23.5505, 2] as [number, number, number],
-    details: {
-      employees: 245,
-      energy: '2.4 MW',
-      efficiency: '94%',
-      lastUpdate: '2 minutes ago'
-    }
-  },
-  {
-    id: 'unit-2',
-    name: 'Silicon Valley Campus',
-    location: 'California, USA',
-    status: 'Active',
-    color: 'secondary' as const,
-    position: [-122.0842, 37.4221, 2] as [number, number, number],
-    details: {
-      employees: 189,
-      energy: '1.8 MW',
-      efficiency: '97%',
-      lastUpdate: '5 minutes ago'
-    }
-  },
-  {
-    id: 'unit-3',
-    name: 'London Centre',
-    location: 'London, UK',
-    status: 'Operational',
-    color: 'accent' as const,
-    position: [-0.1276, 51.5074, 2] as [number, number, number],
-    details: {
-      employees: 156,
-      energy: '1.2 MW',
-      efficiency: '91%',
-      lastUpdate: '1 minute ago'
-    }
-  },
-  {
-    id: 'unit-4',
-    name: 'Tokyo Innovation Lab',
-    location: 'Tokyo, Japan',
-    status: 'Research Mode',
-    color: 'primary' as const,
-    position: [139.6917, 35.6895, 2] as [number, number, number],
-    details: {
-      employees: 98,
-      energy: '0.8 MW',
-      efficiency: '89%',
-      lastUpdate: '12 minutes ago'
-    }
-  },
-  {
-    id: 'unit-5',
-    name: 'Sydney Office',
-    location: 'Sydney, Australia',
-    status: 'Operational',
-    color: 'secondary' as const,
-    position: [151.2093, -33.8688, 2] as [number, number, number],
-    details: {
-      employees: 67,
-      energy: '0.9 MW',
-      efficiency: '96%',
-      lastUpdate: '8 minutes ago'
-    }
-  }
+// Mock de dados para simulação (pode ser substituído pela chamada à API do Supabase)
+const mockUnits = [
+  { id: '1', name: 'Biosolvit Matriz', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
+  { id: '2', name: 'Biogreen', country: 'Brasil', location: 'Porto Belo, SC', coordinates: { lng: -48.555, lat: -27.158 } },
+  { id: '3', name: 'Bioblue Response', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
+  { id: '4', name: 'Biosolvit Texas', country: 'EUA', location: 'Houston, TX', coordinates: { lng: -95.369, lat: 29.760 } },
+  { id: '5', name: 'Biosolvit Portugal', country: 'Portugal', location: 'Coimbra', coordinates: { lng: -8.419, lat: 40.205 } },
 ];
 
-const OrbitalDashboard: React.FC = () => {
-  const [hoveredUnit, setHoveredUnit] = useState<any>(null);
-  const [selectedUnit, setSelectedUnit] = useState<any>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const mapRef = useRef<mapboxgl.Map | null>(null);
+export default function OrbitalDashboard() {
+  const [selectedUnitId, setSelectedUnitId] = useState<string | null>(null);
+  const [map, setMap] = useState<mapboxgl.Map | null>(null);
 
-  const handleUnitHover = useCallback((unit: any) => {
-    setHoveredUnit(unit);
-  }, []);
-
-  const handleUnitClick = useCallback((unit: any) => {
-    setSelectedUnit(unit);
-    setHoveredUnit(null);
-  }, []);
-
-  const handleCloseCard = useCallback(() => {
-    setSelectedUnit(null);
-  }, []);
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  }, []);
-
-  const handleMapLoad = useCallback((map: mapboxgl.Map) => {
-    mapRef.current = map;
-  }, []);
-
-  const handleUnitFlyTo = useCallback((unit: any) => {
-    if (mapRef.current) {
-      mapRef.current.flyTo({
-        center: [unit.position[0], unit.position[1]],
-        zoom: 6,
-        pitch: 60,
-        bearing: 0,
-        duration: 2000
+  // Função chamada pelo seletor de unidades. Apenas move o mapa.
+  const handleUnitSelect = (unit: any) => {
+    if (map) {
+      map.flyTo({
+        center: unit.coordinates,
+        zoom: 10, // Zoom mais próximo ao aterrisar
+        speed: 0.8,
+        curve: 1.2,
+        essential: true,
       });
+      // Lógica de abrir o card foi REMOVIDA daqui, como solicitado.
     }
-    setSelectedUnit(unit);
-  }, []);
+  };
+  
+  // Esta função será chamada pelo futuro ícone 3D para abrir o card
+  const handleIconClick = (unitId: string) => {
+      setSelectedUnitId(unitId);
+  }
+
+  const selectedUnit = mockUnits.find(u => u.id === selectedUnitId);
 
   return (
-    <div 
-      className="relative w-screen h-screen overflow-hidden bg-background"
-      onMouseMove={handleMouseMove}
-    >
-      {/* Global Map Base */}
-      <div className="absolute inset-0">
-        <GlobalMap 
-          className="w-full h-full" 
-          onMapLoad={handleMapLoad}
-        />
+    <main className="relative w-full h-full">
+      <GlobalMap onMapLoad={setMap} />
+      
+      {/* Camada da UI sobre o mapa */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="p-6 md:p-8">
+          <BrandHeader />
+        </div>
+
+        <div className="absolute top-6 right-6 md:top-8 md:right-8 pointer-events-auto">
+          <UnitSelector units={mockUnits} onUnitSelect={handleUnitSelect} />
+        </div>
+
+        <div className="absolute right-6 md:right-8 top-1/2 -translate-y-1/2 pointer-events-auto">
+          <GlobalKPIs />
+        </div>
+        
+        <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 pointer-events-auto">
+            <InteractiveGuides />
+        </div>
       </div>
-
-      {/* 3D Unit Icons Overlay */}
-      <div className="absolute inset-0 pointer-events-none">
-        <UnitIcon3D
-          units={COMPANY_UNITS}
-          onUnitClick={handleUnitClick}
-          onUnitHover={handleUnitHover}
-        />
-      </div>
-
-      {/* Hover Cards */}
-      <UnitCard
-        unit={hoveredUnit}
-        mode={hoveredUnit ? 'hover' : 'hidden'}
-        position={mousePosition}
-      />
-
-      {/* Expanded Detail Cards */}
-      <UnitCard
-        unit={selectedUnit}
-        mode={selectedUnit ? 'expanded' : 'hidden'}
-        onClose={handleCloseCard}
-      />
-
-      {/* Brand Header */}
-      <BrandHeader />
-
-      {/* Unit Selector */}
-      <UnitSelector 
-        units={COMPANY_UNITS}
-        onUnitSelect={handleUnitFlyTo}
-        selectedUnit={selectedUnit}
-      />
-
-      {/* Global KPIs */}
-      <GlobalKPIs />
-
-      {/* Interactive Guides */}
-      <InteractiveGuides />
-    </div>
+      
+      {/* Lógica para mostrar o card expandido */}
+      <AnimatePresence>
+        {selectedUnit && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-auto bg-black/20 backdrop-blur-sm">
+             <UnitCard unit={selectedUnit} onClose={() => setSelectedUnitId(null)} />
+          </div>
+        )}
+      </AnimatePresence>
+    </main>
   );
-};
-
-export default OrbitalDashboard;
+}
