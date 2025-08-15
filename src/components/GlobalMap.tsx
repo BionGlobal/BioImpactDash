@@ -11,7 +11,7 @@ interface GlobalMapProps {
 
 export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const isSpinning = useRef(true); // Usamos useRef para controlar o estado da animação
+  const animationFrameId = useRef<number>();
 
   useEffect(() => {
     if (mapContainer.current) {
@@ -43,21 +43,19 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
 
-        // ### INÍCIO DA NOVA ANIMAÇÃO DE ROTAÇÃO E ZOOM ###
-        
-        // Função que faz o globo girar
+        // ### INÍCIO DA ANIMAÇÃO CORRIGIDA ###
+        let isSpinning = true;
+
         const spinGlobe = () => {
-          if (!isSpinning.current) return; // Para a animação
+          if (!isSpinning) return;
           const center = map.getCenter();
-          center.lng -= 0.1; // Velocidade da rotação
+          center.lng -= 0.1;
           map.easeTo({ center, duration: 0, easing: (n) => n });
-          requestAnimationFrame(spinGlobe);
+          animationFrameId.current = requestAnimationFrame(spinGlobe);
         }
 
-        // Inicia a rotação
         spinGlobe();
 
-        // Animação de entrada suave para enquadrar o Brasil
         map.flyTo({
             center: [-52, -14.5],
             zoom: 3.8,
@@ -68,17 +66,24 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
             easing(t) { return t; },
         });
 
-        // Ouve o final do movimento 'flyTo' para parar a rotação
+        // Ouve o final do movimento 'flyTo' para parar a rotação de forma segura
         map.once('moveend', () => {
-          isSpinning.current = false;
+          isSpinning = false;
+          if (animationFrameId.current) {
+            cancelAnimationFrame(animationFrameId.current);
+          }
         });
-        
-        // ### FIM DA NOVA ANIMAÇÃO ###
+        // ### FIM DA ANIMAÇÃO CORRIGIDA ###
         
         onMapLoad(map);
       });
 
-      return () => map.remove();
+      return () => {
+        map.remove();
+        if (animationFrameId.current) {
+          cancelAnimationFrame(animationFrameId.current);
+        }
+      };
     }
   }, [onMapLoad]);
 
