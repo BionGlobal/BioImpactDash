@@ -37,7 +37,7 @@ export default function UnitSelector({ units, onUnitSelect }: UnitSelectorProps)
         className="w-64 bg-white/50 backdrop-blur-lg border-gray-200/50 rounded-lg"
         align="end"
       >
-        {Object.entries(unitsByCountry).map(([country, countryUnits]) => (
+        {Object.entries(unitsByCountry).map(([country, countryUnits], index) => (
           <DropdownMenuGroup key={country}>
             <DropdownMenuLabel className="font-semibold text-gray-800">{country}</DropdownMenuLabel>
             {(countryUnits as any[]).map((unit) => (
@@ -46,7 +46,7 @@ export default function UnitSelector({ units, onUnitSelect }: UnitSelectorProps)
               </DropdownMenuItem>
             ))}
              {/* Adiciona separador apenas se não for o último grupo */}
-            {Object.keys(unitsByCountry).indexOf(country) < Object.keys(unitsByCountry).length - 1 && (
+            {index < Object.keys(unitsByCountry).length - 1 && (
               <DropdownMenuSeparator className="bg-gray-200/50" />
             )}
           </DropdownMenuGroup>
