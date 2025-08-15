@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+// O seu token de acesso ao Mapbox
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmlvbi1nbG9iYWwtYmlvIiwiYSI6ImNtZWN2d243OTA0cDYybHNmOGZuMG1xcHgifQ.ioEhcw2w72CrhnNc55HsNQ';
 
 interface GlobalMapProps {
@@ -15,18 +16,27 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
     if (mapContainer.current) {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        style: 'mapbox://styles/mapbox/light-v11', // Mantemos a base clara
         center: [-55, -15],
-        zoom: 2, // Zoom inicial mais distante para a animação de entrada
+        zoom: 2,
         pitch: 45,
         bearing: 0,
-        interactive: true, // Habilita os controlos de zoom e rotação
+        interactive: true,
       });
 
       map.on('load', () => {
-        // Customização do estilo para um visual limpo
-        map.setPaintProperty('water', 'fill-color', '#FFFFFF');
+        // ### INÍCIO DA ALTERAÇÃO DE CONTRASTE ###
+        // Removemos camadas desnecessárias para um visual mais limpo
+        map.removeLayer('road-major-label');
+        map.removeLayer('road-street-label');
+        map.removeLayer('road-minor-label');
         
+        // Aplicamos as novas cores para criar contraste
+        map.setPaintProperty('water', 'fill-color', '#eef2f9'); // Oceano com um tom cinza-azulado muito claro
+        map.setPaintProperty('land', 'fill-color', '#d1d5db'); // Continentes com um cinza claro
+        map.setPaintProperty('national-park', 'fill-color', '#e5e7eb'); // Parques/áreas verdes com um tom intermédio
+        // ### FIM DA ALTERAÇÃO DE CONTRASTE ###
+
         // Adiciona terreno 3D
         map.addSource('mapbox-dem', {
           'type': 'raster-dem',
@@ -42,7 +52,7 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
             zoom: 3.8,
             pitch: 50,
             bearing: -15,
-            speed: 0.5, // Velocidade mais lenta para uma entrada suave
+            speed: 0.5,
             curve: 1,
             easing(t) { return t; },
         });
