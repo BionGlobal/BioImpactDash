@@ -31,24 +31,3 @@ export default function GlobalKPIs() {
     </Card>
   );
 }
-
-/*
-=================================================================
-ARQUIVO PARA ATUALIZAR: /tailwind.config.ts
-=================================================================
-*/
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  // ... (outras configurações que você já tenha)
-  theme: {
-    // ...
-    extend: {
-      fontFamily: {
-        sans: ["Montserrat", "sans-serif"],
-        montserrat: ["Montserrat", "sans-serif"],
-      },
-      // ...
-    },
-  },
-  plugins: [require("tailwindcss-animate")],
-}
