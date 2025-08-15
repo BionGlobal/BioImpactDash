@@ -11,12 +11,13 @@ interface GlobalMapProps {
 
 export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
+  const isSpinning = useRef(true); // Usamos useRef para controlar o estado da animação
 
   useEffect(() => {
     if (mapContainer.current) {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11', // Mantemos a base clara
+        style: 'mapbox://styles/mapbox/light-v11',
         center: [-55, -15],
         zoom: 2,
         pitch: 45,
@@ -25,20 +26,15 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
       });
 
       map.on('load', () => {
-        // ### INÍCIO DA ALTERAÇÃO DE CONTRASTE E CORREÇÃO DA ANIMAÇÃO ###
-        // A remoção de camadas de forma segura evita que a animação falhe.
-        // Verificamos se a camada existe antes de a tentar remover.
+        // Estilo e contraste do mapa
         if (map.getLayer('road-major-label')) map.removeLayer('road-major-label');
         if (map.getLayer('road-street-label')) map.removeLayer('road-street-label');
         if (map.getLayer('road-minor-label')) map.removeLayer('road-minor-label');
-        
-        // Aplicamos as novas cores para criar contraste
-        map.setPaintProperty('water', 'fill-color', '#eef2f9'); // Oceano com um tom cinza-azulado muito claro
-        map.setPaintProperty('land', 'fill-color', '#d1d5db'); // Continentes com um cinza claro
-        map.setPaintProperty('national-park', 'fill-color', '#e5e7eb'); // Parques/áreas verdes com um tom intermédio
-        // ### FIM DA ALTERAÇÃO ###
+        map.setPaintProperty('water', 'fill-color', '#eef2f9');
+        map.setPaintProperty('land', 'fill-color', '#d1d5db');
+        map.setPaintProperty('national-park', 'fill-color', '#e5e7eb');
 
-        // Adiciona terreno 3D
+        // Terreno 3D
         map.addSource('mapbox-dem', {
           'type': 'raster-dem',
           'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -46,6 +42,20 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
           'maxzoom': 14
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+        // ### INÍCIO DA NOVA ANIMAÇÃO DE ROTAÇÃO E ZOOM ###
+        
+        // Função que faz o globo girar
+        const spinGlobe = () => {
+          if (!isSpinning.current) return; // Para a animação
+          const center = map.getCenter();
+          center.lng -= 0.1; // Velocidade da rotação
+          map.easeTo({ center, duration: 0, easing: (n) => n });
+          requestAnimationFrame(spinGlobe);
+        }
+
+        // Inicia a rotação
+        spinGlobe();
 
         // Animação de entrada suave para enquadrar o Brasil
         map.flyTo({
@@ -57,6 +67,13 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
             curve: 1,
             easing(t) { return t; },
         });
+
+        // Ouve o final do movimento 'flyTo' para parar a rotação
+        map.once('moveend', () => {
+          isSpinning.current = false;
+        });
+        
+        // ### FIM DA NOVA ANIMAÇÃO ###
         
         onMapLoad(map);
       });
