@@ -16,17 +16,17 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/light-v11',
+        // Posição inicial mais distante para a animação de abertura
         center: [-55, -15],
-        zoom: 2, // Zoom inicial mais distante para permitir a animação de aproximação
+        zoom: 2,
         pitch: 45,
         bearing: 0,
         interactive: true,
       });
 
       map.on('load', () => {
-        // Alterada a cor do oceano para um tom verde-azulado claro
+        // Cor do oceano e dos continentes
         map.setPaintProperty('water', 'fill-color', '#d4e6e8'); 
-        // Mantemos os continentes com um cinza claro para garantir o contraste
         map.setPaintProperty('land', 'fill-color', '#f0f0f0');
 
         // Adiciona terreno 3D
@@ -37,8 +37,9 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
           'maxzoom': 14
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-
-        // Animação de abertura com aproximação suave
+        
+        // ### CORREÇÃO DEFINITIVA DA ANIMAÇÃO DE ABERTURA ###
+        // A animação é chamada aqui, após o mapa estar totalmente carregado e estilizado.
         map.flyTo({
             center: [-52, -14.5],
             zoom: 3.8,
@@ -48,6 +49,7 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
             curve: 1,
             easing(t) { return t; },
         });
+        // ### FIM DA CORREÇÃO ###
         
         onMapLoad(map);
       });
