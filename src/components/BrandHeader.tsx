@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import biosolvitLogo from '@/assets/biosolvit-logo.png';
 
 const BrandHeader: React.FC = () => {
   return (
@@ -13,7 +12,7 @@ const BrandHeader: React.FC = () => {
       <div className="glass-card p-4 border-border/10">
         <div className="flex flex-col space-y-2">
           <img 
-            src={biosolvitLogo} 
+            src="/biosolvit-logo.png" 
             alt="Biosolvit" 
             className="h-8 w-auto object-contain"
           />
