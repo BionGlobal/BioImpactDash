@@ -1,9 +1,9 @@
 import OrbitalDashboard from "@/components/OrbitalDashboard";
 
-// Adiciona a fonte Montserrat e remove o overflow da página
 export default function Index() {
   return (
-    <div className="w-screen h-screen overflow-hidden bg-gray-100 font-montserrat">
+    // Adicionado um gradiente suave ao fundo ("céu") para dar profundidade
+    <div className="w-screen h-screen overflow-hidden bg-gradient-to-br from-white to-gray-200 font-sans">
       <OrbitalDashboard />
     </div>
   );
