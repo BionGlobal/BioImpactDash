@@ -15,19 +15,20 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
     if (mapContainer.current) {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        // ### INÍCIO DA ALTERAÇÃO ###
+        // Substitua o URL abaixo pelo URL do seu estilo personalizado do Mapbox Studio.
+        // Ele deve ter o formato: 'mapbox://styles/seu-username/seu-style-id'
+        style: 'mapbox://styles/bion-global-bio/cmedabf0b00tz01pjhisy8ack', 
+        // ### FIM DA ALTERAÇÃO ###
         center: [-55, -15],
-        zoom: 2, // Zoom inicial mais distante para a animação de entrada
+        zoom: 2,
         pitch: 45,
         bearing: 0,
-        interactive: true, // Habilita os controlos de zoom e rotação
+        interactive: true,
       });
 
       map.on('load', () => {
-        // Customização do estilo para um visual limpo
-        map.setPaintProperty('water', 'fill-color', '#FFFFFF');
-        
-        // Adiciona terreno 3D
+        // Adiciona terreno 3D (opcional, pode remover se o seu estilo já tiver)
         map.addSource('mapbox-dem', {
           'type': 'raster-dem',
           'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -35,14 +36,14 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
           'maxzoom': 14
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-
-        // Animação de entrada suave para enquadrar o Brasil
+        
+        // Animação de abertura com aproximação suave
         map.flyTo({
             center: [-52, -14.5],
             zoom: 3.8,
             pitch: 50,
             bearing: -15,
-            speed: 0.5, // Velocidade mais lenta para uma entrada suave
+            speed: 0.5,
             curve: 1,
             easing(t) { return t; },
         });
