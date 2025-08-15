@@ -1,8 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
+import mapboxgl from 'mapbox-gl';
 import GlobalMap from './GlobalMap';
 import UnitIcon3D from './UnitIcon3D';
 import UnitCard from './UnitCard';
+import BrandHeader from './BrandHeader';
+import UnitSelector from './UnitSelector';
+import GlobalKPIs from './GlobalKPIs';
+import InteractiveGuides from './InteractiveGuides';
 
 // Mock data for company units
 const COMPANY_UNITS = [
@@ -82,6 +87,7 @@ const OrbitalDashboard: React.FC = () => {
   const [hoveredUnit, setHoveredUnit] = useState<any>(null);
   const [selectedUnit, setSelectedUnit] = useState<any>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mapRef = useRef<mapboxgl.Map | null>(null);
 
   const handleUnitHover = useCallback((unit: any) => {
     setHoveredUnit(unit);
@@ -100,6 +106,23 @@ const OrbitalDashboard: React.FC = () => {
     setMousePosition({ x: e.clientX, y: e.clientY });
   }, []);
 
+  const handleMapLoad = useCallback((map: mapboxgl.Map) => {
+    mapRef.current = map;
+  }, []);
+
+  const handleUnitFlyTo = useCallback((unit: any) => {
+    if (mapRef.current) {
+      mapRef.current.flyTo({
+        center: [unit.position[0], unit.position[1]],
+        zoom: 6,
+        pitch: 60,
+        bearing: 0,
+        duration: 2000
+      });
+    }
+    setSelectedUnit(unit);
+  }, []);
+
   return (
     <div 
       className="relative w-screen h-screen overflow-hidden bg-background"
@@ -107,7 +130,10 @@ const OrbitalDashboard: React.FC = () => {
     >
       {/* Global Map Base */}
       <div className="absolute inset-0">
-        <GlobalMap className="w-full h-full" />
+        <GlobalMap 
+          className="w-full h-full" 
+          onMapLoad={handleMapLoad}
+        />
       </div>
 
       {/* 3D Unit Icons Overlay */}
@@ -133,83 +159,21 @@ const OrbitalDashboard: React.FC = () => {
         onClose={handleCloseCard}
       />
 
-      {/* Dashboard Header */}
-      <motion.header
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.6 }}
-        className="absolute top-0 left-0 right-0 z-30 p-6"
-      >
-        <div className="flex justify-between items-center">
-          <div className="glass-card p-4 border-primary/20">
-            <h1 className="text-2xl font-bold text-foreground">
-              Global Operations Center
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              Real-time orbital overview of worldwide facilities
-            </p>
-          </div>
+      {/* Brand Header */}
+      <BrandHeader />
 
-          <div className="glass-card p-4 border-secondary/20">
-            <div className="flex items-center space-x-4">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-secondary">
-                  {COMPANY_UNITS.length}
-                </div>
-                <div className="text-xs text-muted-foreground">Active Units</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">
-                  {COMPANY_UNITS.reduce((sum, unit) => sum + unit.details.employees, 0)}
-                </div>
-                <div className="text-xs text-muted-foreground">Total Staff</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-accent">
-                  {COMPANY_UNITS.reduce((sum, unit) => sum + parseFloat(unit.details.energy), 0).toFixed(1)} MW
-                </div>
-                <div className="text-xs text-muted-foreground">Power Usage</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.header>
+      {/* Unit Selector */}
+      <UnitSelector 
+        units={COMPANY_UNITS}
+        onUnitSelect={handleUnitFlyTo}
+        selectedUnit={selectedUnit}
+      />
 
-      {/* Status Indicator */}
-      <motion.div
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-        className="absolute bottom-6 right-6 z-30"
-      >
-        <div className="glass-card p-4 border-primary/20">
-          <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full bg-primary pulse-glow" />
-            <span className="text-sm font-medium">All Systems Operational</span>
-          </div>
-          <div className="text-xs text-muted-foreground mt-1">
-            Last sync: Just now
-          </div>
-        </div>
-      </motion.div>
+      {/* Global KPIs */}
+      <GlobalKPIs />
 
-      {/* Instructions Overlay */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2, duration: 0.8 }}
-        className="absolute bottom-6 left-6 z-30"
-      >
-        <div className="glass-card p-4 border-accent/20 max-w-sm">
-          <h3 className="font-semibold text-sm mb-2">Navigation Guide</h3>
-          <div className="space-y-1 text-xs text-muted-foreground">
-            <div>• Hover over units for quick info</div>
-            <div>• Click units for detailed view</div>
-            <div>• Drag to rotate the globe</div>
-            <div>• Zoom with mouse wheel</div>
-          </div>
-        </div>
-      </motion.div>
+      {/* Interactive Guides */}
+      <InteractiveGuides />
     </div>
   );
 };

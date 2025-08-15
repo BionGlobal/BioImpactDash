@@ -21,25 +21,25 @@ const GlobalMap: React.FC<MapProps> = ({ onMapLoad, className = '' }) => {
     // Set Mapbox access token
     mapboxgl.accessToken = MAPBOX_TOKEN;
     
-    // Initialize map with clean minimal style
+    // Initialize map with clean minimal style focused on Brazil
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11', // Clean base style
       projection: 'globe', // 3D globe projection
-      zoom: 1.8,
-      center: [0, 20],
+      zoom: 4.2, // More zoomed for Brazil focus
+      center: [-47.9292, -15.7749], // Center on Brazil
       pitch: 45, // Low orbit perspective
       bearing: 0,
       antialias: true
     });
 
-    // Add navigation controls with custom styling
-    const nav = new mapboxgl.NavigationControl({
-      visualizePitch: true,
-      showZoom: true,
-      showCompass: true
-    });
-    map.current.addControl(nav, 'top-right');
+    // Hide default controls for cleaner look
+    // const nav = new mapboxgl.NavigationControl({
+    //   visualizePitch: true,
+    //   showZoom: true,
+    //   showCompass: true
+    // });
+    // map.current.addControl(nav, 'top-right');
 
     // Disable scroll zoom for precise control
     map.current.scrollZoom.disable();
@@ -48,13 +48,13 @@ const GlobalMap: React.FC<MapProps> = ({ onMapLoad, className = '' }) => {
     map.current.on('style.load', () => {
       if (!map.current) return;
       
-      // Add atmospheric effects
+      // Add atmospheric effects with clean white background
       map.current.setFog({
-        'color': 'hsl(220, 15%, 95%)',
-        'high-color': 'hsl(220, 30%, 85%)',
+        'color': 'hsl(0, 0%, 98%)', // Clean white
+        'high-color': 'hsl(0, 0%, 95%)', // Very light gray
         'horizon-blend': 0.1,
-        'space-color': 'hsl(220, 50%, 10%)',
-        'star-intensity': 0.3
+        'space-color': 'hsl(0, 0%, 97%)', // Almost white space
+        'star-intensity': 0.1 // Minimal stars
       });
 
       // Add subtle terrain exaggeration for 3D relief
