@@ -25,17 +25,18 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
       });
 
       map.on('load', () => {
-        // ### INÍCIO DA ALTERAÇÃO DE CONTRASTE ###
-        // Removemos camadas desnecessárias para um visual mais limpo
-        map.removeLayer('road-major-label');
-        map.removeLayer('road-street-label');
-        map.removeLayer('road-minor-label');
+        // ### INÍCIO DA ALTERAÇÃO DE CONTRASTE E CORREÇÃO DA ANIMAÇÃO ###
+        // A remoção de camadas de forma segura evita que a animação falhe.
+        // Verificamos se a camada existe antes de a tentar remover.
+        if (map.getLayer('road-major-label')) map.removeLayer('road-major-label');
+        if (map.getLayer('road-street-label')) map.removeLayer('road-street-label');
+        if (map.getLayer('road-minor-label')) map.removeLayer('road-minor-label');
         
         // Aplicamos as novas cores para criar contraste
         map.setPaintProperty('water', 'fill-color', '#eef2f9'); // Oceano com um tom cinza-azulado muito claro
         map.setPaintProperty('land', 'fill-color', '#d1d5db'); // Continentes com um cinza claro
         map.setPaintProperty('national-park', 'fill-color', '#e5e7eb'); // Parques/áreas verdes com um tom intermédio
-        // ### FIM DA ALTERAÇÃO DE CONTRASTE ###
+        // ### FIM DA ALTERAÇÃO ###
 
         // Adiciona terreno 3D
         map.addSource('mapbox-dem', {
