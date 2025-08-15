@@ -1,13 +1,11 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
-import mapboxgl from 'mapbox-gl';
-import GlobalMap from './GlobalMap';
-import UnitIcon3D from './UnitIcon3D';
-import UnitCard from './UnitCard';
-import BrandHeader from './BrandHeader';
-import UnitSelector from './UnitSelector';
-import GlobalKPIs from './GlobalKPIs';
-import InteractiveGuides from './InteractiveGuides';
+import { useState } from "react";
+import GlobalMap from "./GlobalMap";
+import BrandHeader from "./BrandHeader";
+import UnitSelector from "./UnitSelector";
+import GlobalKPIs from "./GlobalKPIs";
+import InteractiveGuides from "./InteractiveGuides";
+import UnitCard from "./UnitCard";
+import { AnimatePresence } from "framer-motion";
 
 // Mock data for company units
 const COMPANY_UNITS = [
