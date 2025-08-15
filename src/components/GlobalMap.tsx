@@ -56,3 +56,20 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
 
   return <div ref={mapContainer} className="absolute top-0 left-0 w-full h-full" />;
 }
+
+/*
+=================================================================
+ARQUIVO PARA ATUALIZAR: /src/components/BrandHeader.tsx
+=================================================================
+*/
+// O logo e texto são aplicados diretamente na tela, sem card de fundo.
+export default function BrandHeader() {
+  return (
+    <div className="flex flex-col items-start">
+      <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
+      <p className="text-sm text-gray-600 font-light mt-2">
+        Global Impact Dashboard
+      </p>
+    </div>
+  );
+}
