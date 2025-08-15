@@ -1,75 +1,149 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-mapboxgl.accessToken = 'pk.eyJ1IjoiYmlvbi1nbG9iYWwtYmlvIiwiYSI6ImNtZWN2d243OTA0cDYybHNmOGZuMG1xcHgifQ.ioEhcw2w72CrhnNc55HsNQ';
+// Mapbox access token from user
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiYmlvbi1nbG9iYWwtYmlvIiwiYSI6ImNtZWN2d243OTA0cDYybHNmOGZuMG1xcHgifQ.ioEhcw2w72CrhnNc55HsNQ';
 
-interface GlobalMapProps {
-  onMapLoad: (map: mapboxgl.Map) => void;
+interface MapProps {
+  onMapLoad?: (map: mapboxgl.Map) => void;
+  className?: string;
 }
 
-export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
+const GlobalMap: React.FC<MapProps> = ({ onMapLoad, className = '' }) => {
   const mapContainer = useRef<HTMLDivElement>(null);
+  const map = useRef<mapboxgl.Map | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    if (mapContainer.current) {
-      const map = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
-        center: [-55, -15],
-        zoom: 2, // Zoom inicial mais distante para a animação de entrada
-        pitch: 45,
-        bearing: 0,
-        interactive: true, // Habilita os controlos de zoom e rotação
+    if (!mapContainer.current) return;
+
+    // Set Mapbox access token
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    
+    // Initialize map with clean minimal style focused on Brazil
+    map.current = new mapboxgl.Map({
+      container: mapContainer.current,
+      style: 'mapbox://styles/mapbox/light-v11', // Clean base style
+      projection: 'globe', // 3D globe projection
+      zoom: 4.2, // More zoomed for Brazil focus
+      center: [-47.9292, -15.7749], // Center on Brazil
+      pitch: 45, // Low orbit perspective
+      bearing: 0,
+      antialias: true
+    });
+
+    // Hide default controls for cleaner look
+    // const nav = new mapboxgl.NavigationControl({
+    //   visualizePitch: true,
+    //   showZoom: true,
+    //   showCompass: true
+    // });
+    // map.current.addControl(nav, 'top-right');
+
+    // Disable scroll zoom for precise control
+    map.current.scrollZoom.disable();
+
+    // Add subtle atmosphere and fog for orbital feel
+    map.current.on('style.load', () => {
+      if (!map.current) return;
+      
+      // Add atmospheric effects with clean white background
+      map.current.setFog({
+        'color': 'hsl(0, 0%, 98%)', // Clean white
+        'high-color': 'hsl(0, 0%, 95%)', // Very light gray
+        'horizon-blend': 0.1,
+        'space-color': 'hsl(0, 0%, 97%)', // Almost white space
+        'star-intensity': 0.1 // Minimal stars
       });
 
-      map.on('load', () => {
-        // Customização do estilo para um visual limpo
-        map.setPaintProperty('water', 'fill-color', '#FFFFFF');
-        
-        // Adiciona terreno 3D
-        map.addSource('mapbox-dem', {
-          'type': 'raster-dem',
-          'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
-          'tileSize': 512,
-          'maxzoom': 14
+      // Add subtle terrain exaggeration for 3D relief
+      if (map.current.getSource('mapbox-dem')) {
+        map.current.addLayer({
+          id: 'terrain',
+          type: 'fill-extrusion',
+          source: 'mapbox-dem',
+          paint: {
+            'fill-extrusion-height': [
+              'interpolate',
+              ['linear'],
+              ['get', 'elevation'],
+              0, 0,
+              8848, 8848
+            ],
+            'fill-extrusion-opacity': 0.2
+          }
         });
-        map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+      }
 
-        // Animação de entrada suave para enquadrar o Brasil
-        map.flyTo({
-            center: [-52, -14.5],
-            zoom: 3.8,
-            pitch: 50,
-            bearing: -15,
-            speed: 0.5, // Velocidade mais lenta para uma entrada suave
-            curve: 1,
-            easing(t) { return t; },
+      setIsLoaded(true);
+      onMapLoad?.(map.current);
+    });
+
+    // Gentle rotation animation for immersive feel
+    let userInteracting = false;
+    let spinEnabled = true;
+    const secondsPerRevolution = 180;
+
+    const spinGlobe = () => {
+      if (!map.current || !spinEnabled || userInteracting) return;
+      
+      const zoom = map.current.getZoom();
+      if (zoom < 3) {
+        let distancePerSecond = 360 / secondsPerRevolution;
+        const center = map.current.getCenter();
+        center.lng -= distancePerSecond * 0.5;
+        map.current.easeTo({ 
+          center, 
+          duration: 1000, 
+          easing: (n) => n 
         });
-        
-        onMapLoad(map);
-      });
+      }
+    };
 
-      return () => map.remove();
-    }
+    // Interaction handlers
+    map.current.on('mousedown', () => { userInteracting = true; });
+    map.current.on('mouseup', () => { 
+      userInteracting = false; 
+      setTimeout(spinGlobe, 2000);
+    });
+    map.current.on('touchstart', () => { userInteracting = true; });
+    map.current.on('touchend', () => { 
+      userInteracting = false; 
+      setTimeout(spinGlobe, 2000);
+    });
+    map.current.on('moveend', spinGlobe);
+
+    // Start gentle rotation
+    setTimeout(spinGlobe, 3000);
+
+    // Cleanup
+    return () => {
+      map.current?.remove();
+    };
   }, [onMapLoad]);
 
-  return <div ref={mapContainer} className="absolute top-0 left-0 w-full h-full" />;
-}
-
-/*
-=================================================================
-ARQUIVO PARA ATUALIZAR: /src/components/BrandHeader.tsx
-=================================================================
-*/
-// O logo e texto são aplicados diretamente na tela, sem card de fundo.
-export default function BrandHeader() {
   return (
-    <div className="flex flex-col items-start">
-      <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
-      <p className="text-sm text-gray-600 font-light mt-2">
-        Global Impact Dashboard
-      </p>
+    <div className={`relative w-full h-full ${className}`}>
+      <div 
+        ref={mapContainer} 
+        className="absolute inset-0 rounded-lg overflow-hidden"
+        style={{
+          background: 'hsl(var(--map-ocean))'
+        }}
+      />
+      
+      {/* Loading overlay */}
+      {!isLoaded && (
+        <div className="absolute inset-0 bg-background/95 backdrop-blur-sm flex items-center justify-center">
+          <div className="text-center space-y-4">
+            <div className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
+            <p className="text-muted-foreground">Initializing orbital view...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
-}
+};
+
+export default GlobalMap;

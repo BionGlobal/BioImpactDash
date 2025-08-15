@@ -1,33 +1,94 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, Droplets, Recycle, Package, Mountain } from "lucide-react";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  Leaf, 
+  Droplets, 
+  Recycle, 
+  Package, 
+  MapPin 
+} from 'lucide-react';
 
-const kpis = [
-    { title: "CO₂e evitado", value: "947.2k", unit: "toneladas", icon: Leaf },
-    { title: "Água purificada", value: "125.8M", unit: "litros", icon: Droplets },
-    { title: "Biomassa reciclada", value: "92.4k", unit: "toneladas", icon: Recycle },
-    { title: "Plástico PET neutralizado", value: "34.1k", unit: "toneladas", icon: Package },
-    { title: "Uso da Terra evitado", value: "2.1k", unit: "hectares", icon: Mountain },
+const GLOBAL_KPIS = [
+  {
+    icon: Leaf,
+    label: 'CO₂e Avoided',
+    value: '847.2k',
+    unit: 'tonnes',
+    color: 'text-primary'
+  },
+  {
+    icon: Droplets,
+    label: 'Water Purified',
+    value: '125.8',
+    unit: 'million liters',
+    color: 'text-secondary'
+  },
+  {
+    icon: Recycle,
+    label: 'Biomass Recycled',
+    value: '92.4k',
+    unit: 'tonnes',
+    color: 'text-accent'
+  },
+  {
+    icon: Package,
+    label: 'PET Plastic Neutralized',
+    value: '34.7k',
+    unit: 'tonnes',
+    color: 'text-primary'
+  },
+  {
+    icon: MapPin,
+    label: 'Land Use Avoided',
+    value: '2.1k',
+    unit: 'hectares',
+    color: 'text-secondary'
+  }
 ];
 
-export default function GlobalKPIs() {
+const GlobalKPIs: React.FC = () => {
   return (
-    <Card className="bg-white/50 backdrop-blur-lg border-gray-200/50 rounded-2xl w-64 shadow-sm">
-      <CardHeader>
-        <CardTitle className="text-base font-medium text-gray-800">Impacto Global</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col space-y-4">
-        {kpis.map((kpi, index) => (
-          <div key={index} className="flex items-start space-x-3">
-            <kpi.icon className="h-5 w-5 text-gray-600 mt-1" />
-            <div>
-              <p className="text-sm font-light text-gray-600">{kpi.title}</p>
-              <p className="text-lg font-semibold text-gray-900">
-                {kpi.value} <span className="text-sm font-light text-gray-500">{kpi.unit}</span>
-              </p>
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.9, duration: 0.6 }}
+      className="absolute right-6 top-1/2 transform -translate-y-1/2 z-30"
+    >
+      <div className="glass-card p-4 border-border/10 w-56">
+        <h3 className="text-sm font-semibold text-foreground/90 mb-4 text-center">
+          Global Impact
+        </h3>
+        <div className="space-y-4">
+          {GLOBAL_KPIS.map((kpi, index) => (
+            <motion.div
+              key={kpi.label}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1 + index * 0.1, duration: 0.4 }}
+              className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/20 transition-all duration-200"
+            >
+              <div className={`${kpi.color} opacity-80`}>
+                <kpi.icon className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-xs font-medium text-foreground/90 truncate">
+                  {kpi.label}
+                </div>
+                <div className="flex items-baseline space-x-1">
+                  <span className={`text-sm font-bold ${kpi.color}`}>
+                    {kpi.value}
+                  </span>
+                  <span className="text-xs text-muted-foreground">
+                    {kpi.unit}
+                  </span>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </motion.div>
   );
-}
+};
+
+export default GlobalKPIs;
