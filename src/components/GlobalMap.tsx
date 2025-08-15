@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-// O seu token de acesso ao Mapbox
 mapboxgl.accessToken = 'pk.eyJ1IjoiYmlvbi1nbG9iYWwtYmlvIiwiYSI6ImNtZWN2d243OTA0cDYybHNmOGZuMG1xcHgifQ.ioEhcw2w72CrhnNc55HsNQ';
 
 interface GlobalMapProps {
@@ -18,21 +17,19 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/light-v11',
         center: [-55, -15],
-        zoom: 3.5, // Mantemos o zoom inicial que estava a funcionar
+        zoom: 2, // Zoom inicial mais distante para permitir a animação de aproximação
         pitch: 45,
         bearing: 0,
         interactive: true,
       });
 
       map.on('load', () => {
-        // ### INÍCIO DA ALTERAÇÃO VISUAL ###
         // Alterada a cor do oceano para um tom verde-azulado claro
         map.setPaintProperty('water', 'fill-color', '#d4e6e8'); 
         // Mantemos os continentes com um cinza claro para garantir o contraste
         map.setPaintProperty('land', 'fill-color', '#f0f0f0');
-        // ### FIM DA ALTERAÇÃO VISUAL ###
 
-        // Terreno 3D
+        // Adiciona terreno 3D
         map.addSource('mapbox-dem', {
           'type': 'raster-dem',
           'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
@@ -40,6 +37,17 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
           'maxzoom': 14
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+        // Animação de abertura com aproximação suave
+        map.flyTo({
+            center: [-52, -14.5],
+            zoom: 3.8,
+            pitch: 50,
+            bearing: -15,
+            speed: 0.5,
+            curve: 1,
+            easing(t) { return t; },
+        });
         
         onMapLoad(map);
       });
