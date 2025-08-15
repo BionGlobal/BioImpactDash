@@ -16,19 +16,17 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
       const map = new mapboxgl.Map({
         container: mapContainer.current,
         style: 'mapbox://styles/mapbox/light-v11',
-        // Posição inicial mais distante para a animação de abertura
         center: [-55, -15],
-        zoom: 2,
+        zoom: 2, // Zoom inicial mais distante para a animação de entrada
         pitch: 45,
         bearing: 0,
-        interactive: true,
+        interactive: true, // Habilita os controlos de zoom e rotação
       });
 
       map.on('load', () => {
-        // Cor do oceano e dos continentes
-        map.setPaintProperty('water', 'fill-color', '#d4e6e8'); 
-        map.setPaintProperty('land', 'fill-color', '#f0f0f0');
-
+        // Customização do estilo para um visual limpo
+        map.setPaintProperty('water', 'fill-color', '#FFFFFF');
+        
         // Adiciona terreno 3D
         map.addSource('mapbox-dem', {
           'type': 'raster-dem',
@@ -37,19 +35,17 @@ export default function GlobalMap({ onMapLoad }: GlobalMapProps) {
           'maxzoom': 14
         });
         map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
-        
-        // ### CORREÇÃO DEFINITIVA DA ANIMAÇÃO DE ABERTURA ###
-        // A animação é chamada aqui, após o mapa estar totalmente carregado e estilizado.
+
+        // Animação de entrada suave para enquadrar o Brasil
         map.flyTo({
             center: [-52, -14.5],
             zoom: 3.8,
             pitch: 50,
             bearing: -15,
-            speed: 0.5,
+            speed: 0.5, // Velocidade mais lenta para uma entrada suave
             curve: 1,
             easing(t) { return t; },
         });
-        // ### FIM DA CORREÇÃO ###
         
         onMapLoad(map);
       });
