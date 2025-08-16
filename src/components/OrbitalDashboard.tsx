@@ -1,8 +1,6 @@
 import { useState } from "react";
 import GlobalMap from "./GlobalMap";
-import BrandHeader from "./BrandHeader";
-import UnitSelector from "./UnitSelector";
-import GlobalKPIs from "./GlobalKPIs";
+import FloatingHeader from "./FloatingHeader"; // Importa o novo cabeçalho
 import InteractiveGuides from "./InteractiveGuides";
 import UnitCard from "./UnitCard";
 import { AnimatePresence } from "framer-motion";
@@ -21,9 +19,6 @@ export default function OrbitalDashboard() {
 
   const handleUnitSelect = (unit: any) => {
     if (map) {
-      // Para qualquer animação em progresso (como a de abertura) antes de iniciar uma nova.
-      map.stop();
-
       map.flyTo({
         center: unit.coordinates,
         zoom: 10,
@@ -44,20 +39,14 @@ export default function OrbitalDashboard() {
     <main className="relative w-full h-full">
       <GlobalMap onMapLoad={setMap} />
       
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="p-6 md:p-8">
-          <BrandHeader />
-        </div>
-
-        <div className="absolute top-6 right-6 md:top-8 md:right-8 pointer-events-auto">
-          <UnitSelector units={mockUnits} onUnitSelect={handleUnitSelect} />
-        </div>
-
-        <div className="absolute right-6 md:right-8 top-1/2 -translate-y-1/2 pointer-events-auto">
-          <GlobalKPIs />
+      {/* A camada da UI foi simplificada */}
+      <div className="absolute top-0 left-0 w-full h-full p-4 md:p-8 pointer-events-none">
+        {/* O novo cabeçalho é posicionado aqui */}
+        <div className="pointer-events-auto">
+          <FloatingHeader onUnitSelect={handleUnitSelect} />
         </div>
         
-        <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 pointer-events-auto">
+        <div className="absolute bottom-0 left-4 md:left-8 pointer-events-auto">
             <InteractiveGuides />
         </div>
       </div>
