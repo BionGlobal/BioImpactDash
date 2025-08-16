@@ -6,11 +6,81 @@ import UnitCard from "./UnitCard";
 import { AnimatePresence } from "framer-motion";
 
 const mockUnits = [
-  { id: '1', name: 'Biosolvit Matriz', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
-  { id: '2', name: 'Biogreen', country: 'Brasil', location: 'Porto Belo, SC', coordinates: { lng: -48.555, lat: -27.158 } },
-  { id: '3', name: 'Bioblue Response', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
-  { id: '4', name: 'Biosolvit Texas', country: 'EUA', location: 'Houston, TX', coordinates: { lng: -95.369, lat: 29.760 } },
-  { id: '5', name: 'Biosolvit Portugal', country: 'Portugal', location: 'Coimbra', coordinates: { lng: -8.419, lat: 40.205 } },
+  { 
+    id: '1', 
+    name: 'Biosolvit Matriz', 
+    country: 'Brasil', 
+    location: 'Barra Mansa, RJ', 
+    coordinates: { lng: -44.172, lat: -22.545 },
+    status: 'Operacional',
+    color: 'primary' as const,
+    details: {
+      employees: 145,
+      energy: '2.3 MW',
+      efficiency: '94%',
+      lastUpdate: '15 min atrás'
+    }
+  },
+  { 
+    id: '2', 
+    name: 'Biogreen', 
+    country: 'Brasil', 
+    location: 'Porto Belo, SC', 
+    coordinates: { lng: -48.555, lat: -27.158 },
+    status: 'Operacional',
+    color: 'secondary' as const,
+    details: {
+      employees: 89,
+      energy: '1.8 MW',
+      efficiency: '91%',
+      lastUpdate: '8 min atrás'
+    }
+  },
+  { 
+    id: '3', 
+    name: 'Bioblue Response', 
+    country: 'Brasil', 
+    location: 'Barra Mansa, RJ', 
+    coordinates: { lng: -44.172, lat: -22.545 },
+    status: 'Manutenção',
+    color: 'accent' as const,
+    details: {
+      employees: 67,
+      energy: '1.2 MW',
+      efficiency: '88%',
+      lastUpdate: '1 hora atrás'
+    }
+  },
+  { 
+    id: '4', 
+    name: 'Biosolvit Texas', 
+    country: 'EUA', 
+    location: 'Houston, TX', 
+    coordinates: { lng: -95.369, lat: 29.760 },
+    status: 'Operacional',
+    color: 'primary' as const,
+    details: {
+      employees: 203,
+      energy: '3.1 MW',
+      efficiency: '96%',
+      lastUpdate: '5 min atrás'
+    }
+  },
+  { 
+    id: '5', 
+    name: 'Biosolvit Portugal', 
+    country: 'Portugal', 
+    location: 'Coimbra', 
+    coordinates: { lng: -8.419, lat: 40.205 },
+    status: 'Operacional',
+    color: 'secondary' as const,
+    details: {
+      employees: 78,
+      energy: '1.5 MW',
+      efficiency: '92%',
+      lastUpdate: '12 min atrás'
+    }
+  },
 ];
 
 export default function OrbitalDashboard() {
@@ -54,7 +124,7 @@ export default function OrbitalDashboard() {
       <AnimatePresence>
         {selectedUnit && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-auto bg-black/20 backdrop-blur-sm">
-             <UnitCard unit={selectedUnit} onClose={() => setSelectedUnitId(null)} />
+             <UnitCard unit={selectedUnit} mode="expanded" onClose={() => setSelectedUnitId(null)} />
           </div>
         )}
       </AnimatePresence>
