@@ -20,14 +20,14 @@ const mockUnits = [
 ];
 
 // Dados dos KPIs para o placar
-import { Atom, Droplets, Trees as PalmTree, Package, TreePine, Bike } from "lucide-react";
+import { Atom, Droplets, TreePalm, Recycle, Globe, Bike } from "lucide-react";
 
 const kpis = [
     { title: "CO₂e", unit: "t", value: "947.2k", icon: Atom },
     { title: "Água", unit: "L", value: "125.8M", icon: Droplets },
-    { title: "Biomassa", unit: "t", value: "92.4k", icon: PalmTree },
-    { title: "PET", unit: "t", value: "34.1k", icon: Package },
-    { title: "Terra", unit: "ha", value: "2.1k", icon: TreePine },
+    { title: "Biomassa", unit: "t", value: "92.4k", icon: TreePalm },
+    { title: "PET", unit: "t", value: "34.1k", icon: Recycle },
+    { title: "Terra", unit: "ha", value: "2.1k", icon: Globe },
     { title: "Mobilidade", unit: "km", value: "5.6k", icon: Bike },
 ];
 
@@ -56,7 +56,7 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
       </div>
 
       {/* Centro: Placar de KPIs (oculto em ecrãs menores) */}
-      <div className="hidden lg:flex items-center space-x-4">
+      <div className="hidden lg:flex items-center space-x-8 px-4">
         {kpis.map((kpi, index) => {
           const IconComponent = kpi.icon;
           return (
