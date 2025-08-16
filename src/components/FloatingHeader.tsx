@@ -65,10 +65,12 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
       {/* Lado Direito: Seletor de Unidades */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
+          {/* ### INÍCIO DA CORREÇÃO ### */}
           <Button 
             variant="outline" 
-            className="bg-white/80 border-gray-200/80 rounded-lg font-light text-gray-700 hover:bg-white"
+            className="bg-white/80 border-gray-200/80 rounded-lg font-light text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900"
           >
+          {/* ### FIM DA CORREÇÃO ### */}
             Selecione a Unidade
             <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
