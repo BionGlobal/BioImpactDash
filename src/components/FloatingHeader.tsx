@@ -44,15 +44,28 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
     }, {});
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
+    <div className="relative w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] via-[#2f6b5c] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between overflow-hidden animate-gradient-shift">
+      
+      {/* Animated background particles */}
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-2 left-10 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-100"></div>
+        <div className="absolute top-8 right-20 w-0.5 h-0.5 bg-green-300 rounded-full animate-pulse animation-delay-300"></div>
+        <div className="absolute bottom-4 left-1/4 w-1 h-1 bg-blue-300 rounded-full animate-pulse animation-delay-500"></div>
+        <div className="absolute top-6 right-1/3 w-0.5 h-0.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
+        <div className="absolute bottom-2 right-10 w-1 h-1 bg-green-200 rounded-full animate-pulse animation-delay-900"></div>
+      </div>
       
       {/* Lado Esquerdo: Logo e Título */}
-      <div className="flex items-center space-x-3">
-        <img 
-          src="https://i.imgur.com/YWUFNgt.png" 
-          alt="Biosolvit Logo" 
-          className="h-8 w-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] brightness-110" 
-        />
+      <div className="relative flex items-center space-x-3 z-10">
+        <div className="relative">
+          <img 
+            src="https://i.imgur.com/YWUFNgt.png" 
+            alt="Biosolvit Logo" 
+            className="h-8 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] brightness-110 relative z-10" 
+          />
+          {/* Reflection effect */}
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-shimmer"></div>
+        </div>
         <div className="hidden md:flex flex-col text-xs text-white/70 font-light border-l border-white/20 pl-3 leading-tight">
           <span>Global Impact</span>
           <span>Dashboard</span>
@@ -115,5 +128,3 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
     // ### FIM DA ALTERAÇÃO DE COR ###
   );
 }
-
-
