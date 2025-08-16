@@ -44,28 +44,11 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
     }, {});
 
   return (
-    <div className="relative w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] via-[#2f6b5c] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between overflow-hidden animate-gradient-shift">
-      
-      {/* Animated background particles */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-2 left-10 w-1 h-1 bg-white rounded-full animate-pulse animation-delay-100"></div>
-        <div className="absolute top-8 right-20 w-0.5 h-0.5 bg-green-300 rounded-full animate-pulse animation-delay-300"></div>
-        <div className="absolute bottom-4 left-1/4 w-1 h-1 bg-blue-300 rounded-full animate-pulse animation-delay-500"></div>
-        <div className="absolute top-6 right-1/3 w-0.5 h-0.5 bg-white rounded-full animate-pulse animation-delay-700"></div>
-        <div className="absolute bottom-2 right-10 w-1 h-1 bg-green-200 rounded-full animate-pulse animation-delay-900"></div>
-      </div>
+    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
       
       {/* Lado Esquerdo: Logo e Título */}
-      <div className="relative flex items-center space-x-3 z-10">
-        <div className="relative">
-          <img 
-            src="https://i.imgur.com/YWUFNgt.png" 
-            alt="Biosolvit Logo" 
-            className="h-8 w-auto drop-shadow-[0_0_15px_rgba(255,255,255,0.4)] brightness-110 relative z-10" 
-          />
-          {/* Reflection effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent transform -skew-x-12 animate-shimmer"></div>
-        </div>
+      <div className="flex items-center space-x-3">
+        <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
         <div className="hidden md:flex flex-col text-xs text-white/70 font-light border-l border-white/20 pl-3 leading-tight">
           <span>Global Impact</span>
           <span>Dashboard</span>
@@ -73,7 +56,7 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
       </div>
 
       {/* Centro: Placar de KPIs (oculto em ecrãs menores) */}
-      <div className="hidden lg:flex items-center space-x-10 px-6">
+      <div className="hidden lg:flex items-center space-x-8 px-4">
         {kpis.map((kpi, index) => {
           const IconComponent = kpi.icon;
           return (
@@ -82,8 +65,8 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
               className="group text-center cursor-pointer transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
             >
               <div className="flex items-center justify-center mb-1 transition-colors duration-300 group-hover:text-green-400">
-                <IconComponent className="w-4 h-4 mr-1 text-white/90 group-hover:text-green-400" />
-                <p className="text-xs font-semibold text-white group-hover:text-green-400">{kpi.value}</p>
+                <IconComponent className="w-3 h-3 mr-1" />
+                <p className="text-sm font-semibold text-white group-hover:text-green-400">{kpi.value}</p>
               </div>
               <p className="text-[10px] font-light text-white/70 group-hover:text-blue-400 transition-colors duration-300">
                 {kpi.title} ({kpi.unit})
