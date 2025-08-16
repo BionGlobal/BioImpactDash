@@ -11,7 +11,8 @@ const TickerText = () => {
   ];
 
   return (
-    <div className="text-center text-gray-700 font-medium text-xs tracking-wider overflow-hidden whitespace-nowrap">
+    // Estilo do texto ajustado para máxima legibilidade
+    <div className="text-center text-gray-800 font-medium text-xs tracking-wider overflow-hidden whitespace-nowrap" style={{ textShadow: '0px 1px 3px rgba(255,255,255,0.5)' }}>
       <div className="inline-block animate-ticker">
         {messages.map((msg, i) => (
           <span key={i} className="mx-4">
@@ -35,7 +36,7 @@ export default function TopBar() {
       {/* Lado Esquerdo: Placeholder para futuras funções */}
       <div className="w-1/4">
         {/* Exemplo de link futuro:
-        <a href="#" className="text-xs font-medium text-gray-700 hover:text-black transition-colors">CORPORATE</a>
+        <a href="#" className="text-xs font-medium text-gray-700 hover:text-black transition-colors" style={{ textShadow: '0px 1px 3px rgba(255,255,255,0.5)' }}>CORPORATE</a>
         */}
       </div>
 
@@ -46,11 +47,11 @@ export default function TopBar() {
 
       {/* Lado Direito: Placeholder para futuras funções */}
       <div className="w-1/4 flex items-center justify-end space-x-4 text-gray-700">
-        <button className="flex items-center space-x-1 text-xs font-medium hover:text-black transition-colors">
+        <button className="flex items-center space-x-1 text-xs font-medium hover:text-black transition-colors" style={{ textShadow: '0px 1px 3px rgba(255,255,255,0.5)' }}>
           <Globe size={14} />
           <span>PT</span>
         </button>
-        <button className="flex items-center space-x-1 text-xs font-medium hover:text-black transition-colors">
+        <button className="flex items-center space-x-1 text-xs font-medium hover:text-black transition-colors" style={{ textShadow: '0px 1px 3px rgba(255,255,255,0.5)' }}>
           <User size={14} />
           <span>Login</span>
         </button>
