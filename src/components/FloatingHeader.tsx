@@ -48,7 +48,11 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
       
       {/* Lado Esquerdo: Logo e Título */}
       <div className="flex items-center space-x-3">
-        <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
+        <img 
+          src="https://i.imgur.com/YWUFNgt.png" 
+          alt="Biosolvit Logo" 
+          className="h-8 w-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] brightness-110" 
+        />
         <div className="hidden md:flex flex-col text-xs text-white/70 font-light border-l border-white/20 pl-3 leading-tight">
           <span>Global Impact</span>
           <span>Dashboard</span>
@@ -56,7 +60,7 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
       </div>
 
       {/* Centro: Placar de KPIs (oculto em ecrãs menores) */}
-      <div className="hidden lg:flex items-center space-x-8 px-4">
+      <div className="hidden lg:flex items-center space-x-10 px-6">
         {kpis.map((kpi, index) => {
           const IconComponent = kpi.icon;
           return (
@@ -65,8 +69,8 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
               className="group text-center cursor-pointer transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
             >
               <div className="flex items-center justify-center mb-1 transition-colors duration-300 group-hover:text-green-400">
-                <IconComponent className="w-3 h-3 mr-1" />
-                <p className="text-sm font-semibold text-white group-hover:text-green-400">{kpi.value}</p>
+                <IconComponent className="w-4 h-4 mr-1 text-white/90 group-hover:text-green-400" />
+                <p className="text-xs font-semibold text-white group-hover:text-green-400">{kpi.value}</p>
               </div>
               <p className="text-[10px] font-light text-white/70 group-hover:text-blue-400 transition-colors duration-300">
                 {kpi.title} ({kpi.unit})
