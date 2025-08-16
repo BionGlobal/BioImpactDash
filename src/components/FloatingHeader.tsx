@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,17 +8,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { 
-    ChevronDown, 
-    Molecule,
-    Droplets,
-    Sprout,
-    GlassWater,
-    TreePine,
-    Bike
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
-// Mock de dados
+// Mock de dados (o mesmo que está no seu OrbitalDashboard.tsx)
 const mockUnits = [
   { id: '1', name: 'Biosolvit Matriz', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
   { id: '2', name: 'Biogreen', country: 'Brasil', location: 'Porto Belo, SC', coordinates: { lng: -48.555, lat: -27.158 } },
@@ -28,74 +19,59 @@ const mockUnits = [
   { id: '5', name: 'Biosolvit Portugal', country: 'Portugal', location: 'Coimbra', coordinates: { lng: -8.419, lat: 40.205 } },
 ];
 
+// Dados dos KPIs para o placar
 const kpis = [
-    { icon: Molecule, title: "CO2e", value: "947.2k", unit: "t", hoverColor: "text-green-300" },
-    { icon: Droplets, title: "Água", value: "125.8", unit: "M l", hoverColor: "text-blue-300" },
-    { icon: Sprout, title: "Biomassa", value: "92.4k", unit: "t", hoverColor: "text-green-300" },
-    { icon: GlassWater, title: "PET", value: "34.1k", unit: "t", hoverColor: "text-blue-300" },
-    { icon: TreePine, title: "Terra", value: "2.1k", unit: "ha", hoverColor: "text-green-300" },
-    { icon: Bike, title: "Mobilidade", value: "5604", unit: "km", hoverColor: "text-blue-300" },
+    { title: "CO₂e evitado (t)", value: "947.2k" },
+    { title: "Água purificada (M L)", value: "125.8" },
+    { title: "Biomassa reciclada (t)", value: "92.4k" },
+    { title: "PET neutralizado (t)", value: "34.1k" },
+    { title: "Uso da Terra evitado (ha)", value: "2.1k" },
 ];
+
 
 interface FloatingHeaderProps {
     onUnitSelect: (unit: any) => void;
 }
 
 export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
-    const [hoveredKpi, setHoveredKpi] = useState<string | null>(null);
+    // Agrupa as unidades por país para o menu suspenso
     const unitsByCountry = mockUnits.reduce((acc, unit) => {
         (acc[unit.country] = acc[unit.country] || []).push(unit);
         return acc;
     }, {});
 
   return (
-    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
+    // ### INÍCIO DA ALTERAÇÃO DE COR ###
+    // Aplicado um gradiente com os tons da marca e ajustadas as cores do texto para branco
+    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#2c5b76] to-[#3a7d44] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
       
-      <div className="flex items-center space-x-4">
+      {/* Lado Esquerdo: Logo e Título */}
+      <div className="flex items-center space-x-3">
         <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
-        <div className="hidden md:flex flex-col text-xs text-white/70 font-light leading-none border-l border-white/20 pl-4">
-          <span>Global</span>
-          <span>Impact</span>
-          <span>Dashboard</span>
-        </div>
+        <span className="hidden md:inline-block text-sm text-white/70 font-light border-l border-white/20 pl-3">
+          Global Impact Dashboard
+        </span>
       </div>
 
+      {/* Centro: Placar de KPIs (oculto em ecrãs menores) */}
       <div className="hidden lg:flex items-center space-x-6">
-        {kpis.map((kpi) => (
-          <div 
-            key={kpi.title} 
-            className="text-center cursor-pointer group"
-            onMouseEnter={() => setHoveredKpi(kpi.title)}
-            onMouseLeave={() => setHoveredKpi(null)}
-          >
-            <div className="flex items-center justify-center space-x-2">
-                <kpi.icon 
-                    size={16} 
-                    className={`transition-colors duration-300 ${hoveredKpi === kpi.title ? kpi.hoverColor : 'text-white/70'}`} 
-                />
-                <p 
-                    className={`text-lg font-semibold transition-colors duration-300 ${hoveredKpi === kpi.title ? 'text-white' : 'text-white'}`}
-                >
-                    {kpi.value}
-                </p>
-            </div>
-            <p 
-                className={`text-[10px] font-light transition-colors duration-300 ${hoveredKpi === kpi.title ? kpi.hoverColor : 'text-white/70'}`}
-            >
-                {kpi.title} ({kpi.unit})
-            </p>
+        {kpis.map((kpi, index) => (
+          <div key={index} className="text-center">
+            <p className="text-xl font-semibold text-white">{kpi.value}</p>
+            <p className="text-xs font-light text-white/70">{kpi.title}</p>
           </div>
         ))}
       </div>
 
+      {/* Lado Direito: Seletor de Unidades */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="bg-white/10 border-white/20 rounded-lg font-light text-white text-xs px-3 py-1 h-auto transition-colors hover:bg-white/20 hover:text-white"
+            className="bg-white/10 border-white/20 rounded-lg font-light text-white transition-colors hover:bg-white/20 hover:text-white"
           >
-            Unidades
-            <ChevronDown className="ml-2 h-3 w-3" />
+            Selecione a Unidade
+            <ChevronDown className="ml-2 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent 
@@ -118,5 +94,6 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
+    // ### FIM DA ALTERAÇÃO DE COR ###
   );
 }
