@@ -2,141 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Interactive Global Dashboard Design System
-All colors MUST be HSL for seamless theming
-*/
-
-@layer base {
-  :root {
-    /* Base Background: Clean white for oceanic feel */
-    --background: 0 0% 100%;
-    --foreground: 220 15% 20%;
-
-    /* Dashboard Cards: Translucent glass effect */
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
-    --card-translucent: 0 0% 100% / 0.85;
-
-    /* Interactive Overlays */
-    --popover: 0 0% 100% / 0.95;
-    --popover-foreground: 220 15% 20%;
-
-    /* Primary: Vibrant Lime Green */
-    --primary: 85 85% 55%;
-    --primary-foreground: 220 15% 20%;
-    --primary-glow: 85 85% 65%;
-
-    /* Secondary: Electric Blue */
-    --secondary: 210 85% 60%;
-    --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 210 85% 70%;
-
-    /* Accent: Modern Lilac */
-    --accent: 280 65% 65%;
-    --accent-foreground: 0 0% 100%;
-    --accent-glow: 280 65% 75%;
-
-    /* Muted: Subtle gray tones */
-    --muted: 220 10% 95%;
-    --muted-foreground: 220 10% 45%;
-
-    /* Destructive states */
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-
-    /* Interactive borders */
-    --border: 220 10% 90%;
-    --input: 220 10% 95%;
-    --ring: 85 85% 55%;
-
-    /* Map styling */
-    --map-ocean: 0 0% 100%;
-    --map-land: 220 5% 96%;
-    --map-focus-overlay: 220 15% 20% / 0.6;
-
-    /* Animation variables */
-    --pulse-duration: 2s;
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-    --radius: 1rem;
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+/* Animação para o carrossel de texto */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
   }
-
-  .dark {
-    /* Dark mode not implemented for this orbital dashboard */
-    --background: 220 15% 8%;
-    --foreground: 0 0% 95%;
-    --map-ocean: 220 15% 8%;
-    --map-land: 220 10% 15%;
-    --card-translucent: 220 15% 8% / 0.85;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  100% {
+    transform: translateX(-50%);
   }
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
-    overflow: hidden; /* No scroll for orbital dashboard */
-  }
-
-  html {
-    overflow: hidden;
-  }
-}
-
-/* Custom animations for 3D icons and UI */
-@layer utilities {
-  .pulse-glow {
-    animation: pulse-glow var(--pulse-duration) cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  .glass-card {
-    @apply backdrop-blur-md bg-card-translucent border border-white/20 shadow-2xl;
-  }
-
-  .transition-spring {
-    transition: var(--transition-spring);
-  }
-
-  .transition-smooth {
-    transition: var(--transition-smooth);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.05);
-    opacity: 1;
-  }
+.animate-ticker {
+  /* A duração da animação pode ser ajustada para ser mais rápida ou mais lenta */
+  animation: ticker 40s linear infinite;
 }
