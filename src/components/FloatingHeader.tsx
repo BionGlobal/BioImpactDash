@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,15 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { 
-    ChevronDown, 
-    Molecule,
-    Droplets,
-    Sprout,
-    GlassWater,
-    TreePine,
-    Bike
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 // Mock de dados (o mesmo que está no seu OrbitalDashboard.tsx)
 const mockUnits = [
@@ -28,17 +19,17 @@ const mockUnits = [
   { id: '5', name: 'Biosolvit Portugal', country: 'Portugal', location: 'Coimbra', coordinates: { lng: -8.419, lat: 40.205 } },
 ];
 
-// ### INÍCIO DA ALTERAÇÃO VISUAL ###
-// Dados dos KPIs atualizados com cores para o novo header claro
+// Dados dos KPIs para o placar
+import { Atom, Droplets, TreePalm, Recycle, Globe, Bike } from "lucide-react";
+
 const kpis = [
-    { icon: Molecule, title: "CO2e", value: "947.2k", unit: "t", hoverColor: "text-green-600" },
-    { icon: Droplets, title: "Água", value: "125.8", unit: "M l", hoverColor: "text-blue-600" },
-    { icon: Sprout, title: "Biomassa", value: "92.4k", unit: "t", hoverColor: "text-green-600" },
-    { icon: GlassWater, title: "PET", value: "34.1k", unit: "t", hoverColor: "text-blue-600" },
-    { icon: TreePine, title: "Terra", value: "2.1k", unit: "ha", hoverColor: "text-green-600" },
-    { icon: Bike, title: "Mobilidade", value: "5604", unit: "km", hoverColor: "text-blue-600" },
+    { title: "CO₂e", unit: "t", value: "947.2k", icon: Atom },
+    { title: "Água", unit: "L", value: "125.8M", icon: Droplets },
+    { title: "Biomassa", unit: "t", value: "92.4k", icon: TreePalm },
+    { title: "PET", unit: "t", value: "34.1k", icon: Recycle },
+    { title: "Terra", unit: "ha", value: "2.1k", icon: Globe },
+    { title: "Mobilidade", unit: "km", value: "5.6k", icon: Bike },
 ];
-// ### FIM DA ALTERAÇÃO VISUAL ###
 
 
 interface FloatingHeaderProps {
@@ -46,54 +37,47 @@ interface FloatingHeaderProps {
 }
 
 export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
-    const [hoveredKpi, setHoveredKpi] = useState<string | null>(null);
+    // Agrupa as unidades por país para o menu suspenso
     const unitsByCountry = mockUnits.reduce((acc, unit) => {
         (acc[unit.country] = acc[unit.country] || []).push(unit);
         return acc;
     }, {});
 
   return (
-    // ### INÍCIO DA ALTERAÇÃO VISUAL ###
-    // Aplicado um gradiente claro e ajustadas as cores do texto para tons escuros
-    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-white/80 via-emerald-50/80 to-sky-50/80 backdrop-blur-lg rounded-2xl shadow-lg border border-gray-200/50 p-3 px-6 flex items-center justify-between">
+    <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
       
       {/* Lado Esquerdo: Logo e Título */}
-      <div className="flex items-center space-x-4">
-        <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
-        <div className="hidden md:flex flex-col text-xs text-gray-500 font-light leading-none border-l border-gray-300 pl-4">
-          <span>Global</span>
-          <span>Impact</span>
+      <div className="flex items-center space-x-3">
+        <img 
+          src="https://i.imgur.com/YWUFNgt.png" 
+          alt="Biosolvit Logo" 
+          className="h-8 w-auto drop-shadow-[0_0_10px_rgba(255,255,255,0.3)] brightness-110" 
+        />
+        <div className="hidden md:flex flex-col text-xs text-white/70 font-light border-l border-white/20 pl-3 leading-tight">
+          <span>Global Impact</span>
           <span>Dashboard</span>
         </div>
       </div>
 
-      {/* Centro: Placar de KPIs com ícones e microinteração */}
-      <div className="hidden lg:flex items-center space-x-6">
-        {kpis.map((kpi) => (
-          <div 
-            key={kpi.title} 
-            className="text-center cursor-pointer group"
-            onMouseEnter={() => setHoveredKpi(kpi.title)}
-            onMouseLeave={() => setHoveredKpi(null)}
-          >
-            <div className="flex items-center justify-center space-x-2">
-                <kpi.icon 
-                    size={16} 
-                    className={`transition-colors duration-300 ${hoveredKpi === kpi.title ? kpi.hoverColor : 'text-gray-500'}`} 
-                />
-                <p 
-                    className={`text-lg font-semibold transition-colors duration-300 ${hoveredKpi === kpi.title ? 'text-gray-900' : 'text-gray-800'}`}
-                >
-                    {kpi.value}
-                </p>
-            </div>
-            <p 
-                className={`text-[10px] font-light transition-colors duration-300 ${hoveredKpi === kpi.title ? kpi.hoverColor : 'text-gray-500'}`}
+      {/* Centro: Placar de KPIs (oculto em ecrãs menores) */}
+      <div className="hidden lg:flex items-center space-x-10 px-6">
+        {kpis.map((kpi, index) => {
+          const IconComponent = kpi.icon;
+          return (
+            <div 
+              key={index} 
+              className="group text-center cursor-pointer transition-all duration-300 hover:scale-105 hover:drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]"
             >
+              <div className="flex items-center justify-center mb-1 transition-colors duration-300 group-hover:text-green-400">
+                <IconComponent className="w-4 h-4 mr-1 text-white/90 group-hover:text-green-400" />
+                <p className="text-xs font-semibold text-white group-hover:text-green-400">{kpi.value}</p>
+              </div>
+              <p className="text-[10px] font-light text-white/70 group-hover:text-blue-400 transition-colors duration-300">
                 {kpi.title} ({kpi.unit})
-            </p>
-          </div>
-        ))}
+              </p>
+            </div>
+          );
+        })}
       </div>
 
       {/* Lado Direito: Seletor de Unidades */}
@@ -101,32 +85,33 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="bg-white/50 border-gray-200/50 rounded-lg font-light text-gray-700 text-xs px-3 py-1 h-auto transition-colors hover:bg-white/80 hover:text-gray-900"
+            size="sm"
+            className="bg-white/10 border-white/20 rounded-lg font-light text-white transition-colors hover:bg-white/20 hover:text-white text-xs px-3 py-1"
           >
             Unidades
-            <ChevronDown className="ml-2 h-3 w-3" />
+            <ChevronDown className="ml-1 h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent 
-          className="w-64 bg-white/70 backdrop-blur-lg border-gray-200/50 rounded-lg text-black"
+          className="w-64 bg-[#33627a]/80 backdrop-blur-lg border-white/10 rounded-lg text-white"
           align="end"
         >
           {Object.entries(unitsByCountry).map(([country, countryUnits], index) => (
             <DropdownMenuGroup key={country}>
-              <DropdownMenuLabel className="font-semibold text-gray-800">{country}</DropdownMenuLabel>
+              <DropdownMenuLabel className="font-semibold text-white/90">{country}</DropdownMenuLabel>
               {(countryUnits as any[]).map((unit) => (
-                <DropdownMenuItem key={unit.id} onSelect={() => onUnitSelect(unit)} className="cursor-pointer focus:bg-gray-100">
+                <DropdownMenuItem key={unit.id} onSelect={() => onUnitSelect(unit)} className="cursor-pointer focus:bg-white/10 focus:text-white">
                   <span>{unit.name}</span>
                 </DropdownMenuItem>
               ))}
               {index < Object.keys(unitsByCountry).length - 1 && (
-                <DropdownMenuSeparator className="bg-gray-200/50" />
+                <DropdownMenuSeparator className="bg-white/10" />
               )}
             </DropdownMenuGroup>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
-    // ### FIM DA ALTERAÇÃO VISUAL ###
+    // ### FIM DA ALTERAÇÃO DE COR ###
   );
 }
