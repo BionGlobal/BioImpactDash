@@ -11,15 +11,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { 
     ChevronDown, 
-    Molecule,       // Ícone para CO2e
-    Droplets,       // Ícone para Água
-    Sprout,         // Ícone para Biomassa (Palmeira)
-    GlassWater,     // Ícone para PET (Garrafa)
-    TreePine,       // Ícone para Terra (Árvore)
-    Bike            // Ícone para Mobilidade
+    Molecule,
+    Droplets,
+    Sprout,
+    GlassWater,
+    TreePine,
+    Bike
 } from "lucide-react";
 
-// Mock de dados (o mesmo que está no seu OrbitalDashboard.tsx)
+// Mock de dados
 const mockUnits = [
   { id: '1', name: 'Biosolvit Matriz', country: 'Brasil', location: 'Barra Mansa, RJ', coordinates: { lng: -44.172, lat: -22.545 } },
   { id: '2', name: 'Biogreen', country: 'Brasil', location: 'Porto Belo, SC', coordinates: { lng: -48.555, lat: -27.158 } },
@@ -28,8 +28,6 @@ const mockUnits = [
   { id: '5', name: 'Biosolvit Portugal', country: 'Portugal', location: 'Coimbra', coordinates: { lng: -8.419, lat: 40.205 } },
 ];
 
-// ### INÍCIO DA REFATORAÇÃO DOS KPIS ###
-// Dados dos KPIs atualizados com ícones, títulos abreviados e cores para o hover
 const kpis = [
     { icon: Molecule, title: "CO2e", value: "947.2k", unit: "t", hoverColor: "text-green-300" },
     { icon: Droplets, title: "Água", value: "125.8", unit: "M l", hoverColor: "text-blue-300" },
@@ -38,8 +36,6 @@ const kpis = [
     { icon: TreePine, title: "Terra", value: "2.1k", unit: "ha", hoverColor: "text-green-300" },
     { icon: Bike, title: "Mobilidade", value: "5604", unit: "km", hoverColor: "text-blue-300" },
 ];
-// ### FIM DA REFATORAÇÃO DOS KPIS ###
-
 
 interface FloatingHeaderProps {
     onUnitSelect: (unit: any) => void;
@@ -53,13 +49,10 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
     }, {});
 
   return (
-    // Gradiente invertido (verde para azul)
     <div className="w-full max-w-7xl mx-auto bg-gradient-to-r from-[#3a7d44] to-[#2c5b76] rounded-2xl shadow-lg border border-white/10 p-3 px-6 flex items-center justify-between">
       
-      {/* Lado Esquerdo: Logo e Título GID */}
       <div className="flex items-center space-x-4">
         <img src="https://i.imgur.com/YWUFNgt.png" alt="Biosolvit Logo" className="h-8 w-auto" />
-        {/* Texto GID empilhado */}
         <div className="hidden md:flex flex-col text-xs text-white/70 font-light leading-none border-l border-white/20 pl-4">
           <span>Global</span>
           <span>Impact</span>
@@ -67,7 +60,6 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
         </div>
       </div>
 
-      {/* Centro: Placar de KPIs com ícones e microinteração */}
       <div className="hidden lg:flex items-center space-x-6">
         {kpis.map((kpi) => (
           <div 
@@ -96,10 +88,8 @@ export default function FloatingHeader({ onUnitSelect }: FloatingHeaderProps) {
         ))}
       </div>
 
-      {/* Lado Direito: Seletor de Unidades */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          {/* Botão com novo estilo e texto */}
           <Button 
             variant="outline" 
             className="bg-white/10 border-white/20 rounded-lg font-light text-white text-xs px-3 py-1 h-auto transition-colors hover:bg-white/20 hover:text-white"
